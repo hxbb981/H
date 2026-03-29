@@ -1,5 +1,4 @@
 #pragma once
-#include "Common.hpp"
 namespace InetAddrMoudel
 {
     class InetAddr
@@ -12,7 +11,7 @@ namespace InetAddrMoudel
             _port = ntohs(peer.sin_port);
             char ipbuffer[64];
             inet_ntop(AF_INET, &peer.sin_addr, ipbuffer, sizeof(ipbuffer));
-            _ip=ipbuffer;
+            _ip = ipbuffer;
         }
         InetAddr(int port)
             : _port(port)
@@ -22,6 +21,16 @@ namespace InetAddrMoudel
             _addr.sin_family = AF_INET;
             _addr.sin_port = htons(_port);
             _addr.sin_addr.s_addr = INADDR_ANY;
+        }
+        InetAddr(const std::string ip, uint16_t port)
+            : _ip(ip), _port(port)
+
+        {
+            // 主机转网络
+            bzero(&_addr, sizeof(_addr));
+            _addr.sin_family = AF_INET;
+            _addr.sin_port = htons(port);
+            inet_pton(AF_INET, ip.c_str(), &_addr.sin_addr);
         }
         uint16_t Port()
         {
