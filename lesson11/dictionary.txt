@@ -4,7 +4,7 @@ teacher: 老师
 student: 学生
 car: 汽车
 bus: 公交车
-love: 爱
+love: 爱c
 hate: 恨
 hello: 你好
 goodbye: 再见

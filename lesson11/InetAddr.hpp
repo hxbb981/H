@@ -48,6 +48,9 @@ namespace InetAddrMoudel
         {
             return _addr;
         }
+        std::string string_addr(){
+            return std::string(_ip);
+        }
         ~InetAddr()
         {
         }
