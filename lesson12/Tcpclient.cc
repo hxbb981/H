@@ -22,9 +22,9 @@ int main(int argc,char*argv[]){
     if(argc!=3){
         LOG(Loglevel::DEBUG)<<"enter error";
     }
-    uint16_t port=std::stoi(argv[1]);
+    uint16_t port=std::stoi(argv[2]);
 
-    std::string server_ip=argv[2];
+    std::string server_ip=argv[1];
 
     InetAddr addr(server_ip,port);
 
@@ -32,10 +32,11 @@ int main(int argc,char*argv[]){
 
     c->Connecty();
 
-    if(c->Connect(addr)!=0){
+    if(c->Connect(server_ip,port)!=0){
         LOG(Loglevel::DEBUG)<<"connect error";
         exit(CON_ERROR);
     }
+    LOG(Loglevel::DEBUG)<<"connect success";
 
     std::unique_ptr<Protocol>p=std::make_unique<Protocol>();//序列化
 
@@ -47,16 +48,16 @@ int main(int argc,char*argv[]){
 
         std::string send_ptr=p->sendrequest(x,y,oper);
 
+        //std::cout<<send_ptr<<std::endl;
+
         c->Send(send_ptr);
 
         //获取应答
         Response rese;
 
-        p->Getresponse(c,addr,&rese);
+        p->Getresponse(c,message,&rese);
 
         rese.Showresult();
-
-
     }
 
 }

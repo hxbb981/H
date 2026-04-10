@@ -1,11 +1,11 @@
 .PHONY:all
-all:ServerNetCald client_netcal 
+all:tcpserver tcpclient
 
-ServerNetCald:Tcpserver.cc
-	g++ -o $@ $^ -std=c++17 
-client_netcal:Tcpclient.cc
-	g++ -o $@ $^ -std=c++17 
+tcpclient:Tcpclient.cc
+	g++ -o $@ $^ -std=c++17 -ljsoncpp -lpthread
 
+tcpserver:Tcpserver.cc
+	g++ -o $@ $^ -std=c++17 -ljsoncpp -lpthread
 .PHONY:clean
 clean:
-	rm -rf ServerNetCald client_netcal output output.tgz
+	rm -f tcpserver tcpclient

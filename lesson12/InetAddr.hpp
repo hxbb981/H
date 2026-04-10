@@ -24,7 +24,7 @@ namespace InetAddrMoudel
             _addr.sin_port = htons(_port);
             _addr.sin_addr.s_addr = INADDR_ANY;
         }
-        InetAddr(const std::string ip, uint16_t port)
+        InetAddr(const std::string &ip, uint16_t port)
             : _ip(ip), _port(port)
 
         {
@@ -41,6 +41,12 @@ namespace InetAddrMoudel
             char ipbuffer[64];
             inet_ntop(AF_INET, &addr.sin_addr, ipbuffer, sizeof(ipbuffer));
             _ip = ipbuffer;
+        }
+        const struct sockaddr*Netaddr(){
+            return CONV(_addr);
+        }
+        socklen_t getlen(){
+            return sizeof(_addr);
         }
         uint16_t Port()
         {

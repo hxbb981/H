@@ -14,9 +14,15 @@ int main(int argc,char*argv[]){
 
 
 
-    std::unique_ptr<Protocol>p=std::make_unique<Protocol>([&n](Request&req){
+    // std::unique_ptr<Protocol>p=std::make_unique<Protocol>([&n](Request&req)->Response{
+    //     return n->solve(req);
+    // });//协议层
+
+     // 2. 协议层
+    std::unique_ptr<Protocol> p = std::make_unique<Protocol>([&n](Request &req)->Response{
         return n->solve(req);
-    });//协议层
+    });
+
 
 
 

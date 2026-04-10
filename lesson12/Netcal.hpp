@@ -16,6 +16,9 @@ public:
         {
         case '+':
             rese.Setresult(reqe.Getx() + reqe.Gety());
+            // 在这里打印日志看看 重新编译运行
+
+            LOG(Loglevel::DEBUG)<< reqe.Getx() << " " <<  reqe.Gety() << " result: " << rese.GetResult() << "success";
             break;
         case '-':
             rese.Setresult(reqe.Getx() - reqe.Gety());
@@ -34,6 +37,7 @@ public:
                 break;
             }
         }
+        return rese;
     }
 
 private:

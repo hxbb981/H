@@ -19,7 +19,7 @@ public:
         while (_isruning)
         {
             InetAddr clie;
-            std::shared_ptr<Socket> sockfd = _listenptr->Accept(&clie); // 这里指针指向一个结构体
+            auto sockfd = _listenptr->Accept(&clie); // 这里指针指向一个结构体
             // 以上我们就创建套接字并接听成功了
             pid_t id = fork();
             if (id < 0)
@@ -32,7 +32,7 @@ public:
                 _listenptr->Close();
                 if (fork() > 0)
                     exit(OK);
-                //_func(sockfd, clie);
+                _func(sockfd, clie);
                 exit(OK);
             }
             else

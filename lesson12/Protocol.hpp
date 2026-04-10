@@ -4,7 +4,7 @@
 #include "Socket.hpp"
 using namespace LogMudel;
 using namespace SocketMoudel;
-using func_t = std::function<Response(Request &req)>;
+// using func_t = std::function<Response(Request &req)>;,定义在后面
 
 class Request
 {
@@ -37,7 +37,7 @@ public:
         if (ok)
         {
             _x = root["x"].asInt();
-            _y = root["Y"].asInt();
+            _y = root["y"].asInt(); // 大小写
             _oper = root["oper"].asInt();
         }
     }
@@ -85,13 +85,18 @@ public:
         }
     }
 
-    void Showresult(){
-        std::cout<<_result<<std::endl;
+    void Showresult()
+    {
+        std::cout<<_result << std::endl;
     }
 
     void Setresult(int result)
     {
         _result = result;
+    }
+    int GetResult()
+    {
+        return _result;
     }
     void Setcode(int code)
     {
@@ -106,12 +111,18 @@ private:
 };
 
 const std::string sep = "\r\n";
-using func_t = std::function<Response(Request &req)>;
+using fun = std::function<Response(Request &req)>;
 
 class Protocol
 {
 public:
-    Protocol(func_t func) : _func(func) {}
+    Protocol()
+    {
+    }
+    Protocol(fun fnc)
+        : func(fnc)
+    {
+    }
     std::string Encode(std::string &str)
     {
         std::string len = std::to_string(str.size());
@@ -144,43 +155,43 @@ public:
         return false;
     }
 
-    void Getresponse(std::shared_ptr<Socket> fd, InetAddr &peer,Response*rese)
+    bool Getresponse(std::shared_ptr<Socket> fd, std::string &message, Response *rese)
     {
         // 向fd中读数据
-        std::string buffer_queue;
         while (true)
         {
             // 从缓冲区读数据
-            int m = fd->Recv(buffer_queue);
+            int m = fd->Recv(&message);
             if (m > 0)
             {
                 // 检查是否得到完整串
                 std::string buffer;
-                bool is_complate = Decode(buffer_queue, &buffer);
+                // bool is_complate = Decode(message, &buffer);
 
-                if (!is_complate)
+                // if (!is_complate)
+                // {
+                //     continue;
+                // }
+                // // 一定得到了字串 就是buffer
+
+                // // 对buffer进行反序列化
+                while (Decode(message, &buffer))
                 {
-                    continue;
+                    std::cout<<buffer<<std::endl;
+
+                    rese->deserialize(buffer);
                 }
-                // 一定得到了字串 就是buffer
-
-                // 对buffer进行反序列化
-
-                rese->deserialize(buffer);
-
-                //
-
-
+                return true;
             }
             else if (m == 0)
             {
-                std::cout<<"quit"<<std::endl;
-                break;
+                std::cout << "quit" << std::endl;
+                return false;
             }
             else
             {
-                std::cout<<"error"<<std::endl;
-                break;
+                std::cout << "error" << std::endl;
+                return false;
             }
         }
     }
@@ -192,7 +203,7 @@ public:
         while (true)
         {
             // 从缓冲区中读字符串
-            int m = fd->Recv(buffer_queue);
+            int m = fd->Recv(&buffer_queue);
             if (m > 0)
             {
                 // 说明从缓冲区中读到了字符串
@@ -202,12 +213,15 @@ public:
                 if (is_complate)
                 {
                     // 得到了一个完整的包头，对他进行反序列化
+                    std::cout << _package << std::endl;
 
                     Request requ; // 空构造
                     requ.deserialize(_package);
 
                     // 计算结果
-                    Response res = _func(requ);
+                    Response res = func(requ);
+
+                    // res.Showresult();
 
                     // 对计算结果进行序列化
                     std::string rese = res.serialize();
@@ -220,7 +234,7 @@ public:
                     fd->Send(send_str);
                 }
             }
-            else if (m = 0)
+            else if (m == 0)
             {
                 LOG(Loglevel::DEBUG) << "quit";
                 exit(QUIT);
@@ -247,5 +261,5 @@ public:
     }
 
 private:
-    func_t _func;
+    fun func;
 };
