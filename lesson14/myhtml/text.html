@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>祝贾怡然生日快乐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 粉色背景 */
+        body {
+            min-height: 100vh;
+            background-color: #ffc0cb;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        /* 雨滴动画容器 */
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 雨滴样式 */
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: white;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        /* 雨滴下落动画 */
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* 蛋糕容器 */
+        .cake {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 30px;
+        }
+
+        /* 生日祝福文字 */
+        .birthday-text {
+            font-size: 28px;
+            color: #ff69b4;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            z-index: 2;
+            text-align: center;
+        }
+
+        /* 爱心样式 */
+        .heart {
+            width: 100px;
+            height: 90px;
+            position: relative;
+            z-index: 2;
+            animation: beat 1s ease infinite;
+        }
+
+        /* 爱心跳动动画 */
+        @keyframes beat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* 爱心绘制 */
+        .heart:before,
+        .heart:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 50px;
+            height: 80px;
+            background: #ff69b4;
+            border-radius: 50px 50px 0 0;
+        }
+
+        .heart:before {
+            left: 50px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- 雨滴容器 -->
+    <div class="rain" id="rain"></div>
+
+    <!-- 蛋糕 -->
+    <svg class="cake" viewBox="0 0 100 100">
+        <!-- 蛋糕底座 -->
+        <rect x="20" y="60" width="60" height="35" fill="#ff69b4" rx="5"/>
+        <!-- 蛋糕奶油层 -->
+        <rect x="22" y="65" width="56" height="8" fill="#ffffff" rx="2"/>
+        <!-- 蛋糕顶部 -->
+        <rect x="30" y="45" width="40" height="15" fill="#ff69b4" rx="5"/>
+        <!-- 蜡烛 -->
+        <rect x="47" y="25" width="6" height="20" fill="#ffff00"/>
+        <circle cx="50" cy="22" r="4" fill="#ff4500"/>
+        <!-- 装饰圆点 -->
+        <circle cx="30" y="70" r="3" fill="#ffffff"/>
+        <circle cx="40" y="75" r="3" fill="#ffffff"/>
+        <circle cx="50" y="68" r="3" fill="#ffffff"/>
+        <circle cx="60" y="73" r="3" fill="#ffffff"/>
+        <circle cx="70" y="69" r="3" fill="#ffffff"/>
+    </svg>
+
+    <!-- 生日祝福 -->
+    <div class="birthday-text">祝贾怡然生日快乐</div>
+
+    <!-- 爱心 -->
+    <div class="heart"></div>
+
+    <script>
+        // 生成随机雨滴
+        const rainContainer = document.getElementById('rain');
+        const dropCount = 80;
+
+        for (let i = 0; i < dropCount; i++) {
+            const drop = document.createElement('div');
+            drop.classList.add('raindrop');
+            
+            // 随机位置、速度、延迟
+            const left = Math.random() * 100;
+            const duration = 1 + Math.random() * 2;
+            const delay = Math.random() * 2;
+            
+            drop.style.left = left + '%';
+            drop.style.animationDuration = duration + 's';
+            drop.style.animationDelay = delay + 's';
+            
+            rainContainer.appendChild(drop);
+        }
+    </script>
+</body>
+</html>
